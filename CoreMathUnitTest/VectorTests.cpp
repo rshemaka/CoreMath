@@ -1,3 +1,6 @@
+// Richard Shemaka - 2019
+// https://github.com/rshemaka/CoreMath
+
 #include "stdafx.h"
 #include "CppUnitTest.h"
 

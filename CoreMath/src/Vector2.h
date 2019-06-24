@@ -8,11 +8,11 @@
 
 // 2d arithmetic vector
 //
-// float & double precision currently supported. 32bit fixed point in the
-// future, hopefully.
+// float & double precision currently supported.
+// ints somewhat supported, not yet fully tested.
 //
 // see the end of the file for ease-of-use typedefs.
-// in general, use 'vec3' as the type around your code.
+// in general, use 'vec2' as the type around your code.
 //
 template <class T>
 class t_vec2

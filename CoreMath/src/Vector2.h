@@ -1,5 +1,5 @@
 // Richard Shemaka - 2019
-// https://github.com/rshemaka/cppmath
+// https://github.com/rshemaka/CoreMath
 
 #pragma once
 #include "MathHelpers.h"

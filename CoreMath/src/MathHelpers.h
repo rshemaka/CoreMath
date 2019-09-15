@@ -33,7 +33,7 @@ namespace MathHelpers
 	}
 }
 
-// templatized versions of std math functions to aid w/ templatized percision types
+// templatized versions of std math functions to aid w/ templatized precision types
 namespace MathT
 {
 	// templated absolute
@@ -136,5 +136,23 @@ namespace MathT
 	inline double copysign(double number, double sign)
 	{
 		return std::copysign(number, sign);
+	}
+
+
+	// templated floor
+	template <class T>
+	inline T floor(T number)
+	{
+		throw std::logic_error("Templated floor should be specialized for all template types.");
+	}
+	template <>
+	inline float floor(float number)
+	{
+		return std::floorf(number);
+	}
+	template <>
+	inline double floor(double number)
+	{
+		return std::floor(number);
 	}
 }

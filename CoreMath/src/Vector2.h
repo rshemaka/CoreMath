@@ -37,6 +37,11 @@ class t_vec2
     static inline T dot(const t_vec2<T>& v1, const t_vec2<T>& v2);
     inline T dot(const t_vec2<T>& v2);
 
+    // anti-clockwise
+    static inline t_vec2<T> rotate(const t_vec2<T>& v1, T rad);
+    // anti-clockwise
+    inline void rotate(T degrees);
+
     inline std::ostream& operator<<(std::ostream& os);
 
     inline t_vec2<T>& operator+=(const t_vec2<T>& v2);
@@ -124,6 +129,23 @@ template <class T>
 inline T t_vec2<T>::dot(const t_vec2<T>& v2)
 {
     return (x * v2.x) + (y * v2.y);
+}
+template <class T>
+inline t_vec2<T> t_vec2<T>::rotate(const t_vec2<T>& v1, T rad)
+{
+    T cos = MathT::cos<T>(rad);
+    T sin = MathT::sin<T>(rad);
+    return t_vec2<T>((cos * x) - (sin * y), (sin * x) - (cos * y));
+}
+template <class T>
+inline void t_vec2<T>::rotate(T rad)
+{
+	T cos = MathT::cos<T>(rad);
+	T sin = MathT::sin<T>(rad);
+	T oldX = x;
+	T oldY = y;
+	x = (cos * oldX) - (sin * oldY);
+	y = (sin * oldX) - (cos * oldY);
 }
 #pragma endregion
 

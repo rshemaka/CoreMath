@@ -6,6 +6,8 @@ AlwaysBreakAfterReturnType: None
 AlwaysBreakTemplateDeclarations: Yes
 PointerAlignment: Left
 BreakBeforeBraces: Custom
+ColumnLimit: 256
+NamespaceIndentation: All
 BraceWrapping:
   AfterClass: true
   AfterControlStatement: true

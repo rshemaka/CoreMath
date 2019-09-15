@@ -140,12 +140,12 @@ inline t_vec2<T> t_vec2<T>::rotate(const t_vec2<T>& v1, T rad)
 template <class T>
 inline void t_vec2<T>::rotate(T rad)
 {
-	T cos = MathT::cos<T>(rad);
-	T sin = MathT::sin<T>(rad);
-	T oldX = x;
-	T oldY = y;
-	x = (cos * oldX) - (sin * oldY);
-	y = (sin * oldX) - (cos * oldY);
+    T cos = MathT::cos<T>(rad);
+    T sin = MathT::sin<T>(rad);
+    T oldX = x;
+    T oldY = y;
+    x = (cos * oldX) - (sin * oldY);
+    y = (sin * oldX) - (cos * oldY);
 }
 #pragma endregion
 

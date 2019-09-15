@@ -19,34 +19,34 @@ template <class T, class U>
 class randomStreamBase
 {
   public:
-	virtual ~randomStreamBase() {}
+    virtual ~randomStreamBase() {}
 
-	// returns a random number in the range of [0.0, 1.0)
+    // returns a random number in the range of [0.0, 1.0)
     virtual T rand01() = 0;
 
-	// returns a random number in the specified range of [min, max)
+    // returns a random number in the specified range of [min, max)
     T randRange(T min, T max)
     {
         return (rand01() * (max - min)) + min;
     }
 
-	// returns a random true or false
-	bool coinFlip()
-	{
-		return rand01() < 0.5;
-	}
+    // returns a random true or false
+    bool coinFlip()
+    {
+        return rand01() < 0.5;
+    }
 
-	// returns a random index given a container size
-	uint32_t randIndex(size_t size)
-	{
-		if (size == 0)
-			return 0;
+    // returns a random index given a container size
+    uint32_t randIndex(size_t size)
+    {
+        if (size == 0)
+            return 0;
 
-		T t = randRange(0, T(size));
-		return uint32_t(MathT::floor<T>(t));
-	}
+        T t = randRange(0, T(size));
+        return uint32_t(MathT::floor<T>(t));
+    }
 
-	// returns a random direction of length 1
+    // returns a random direction of length 1
     U randomPointOnUnitSphere()
     {
         // Muller (1959) method
@@ -64,7 +64,7 @@ class randomStreamBase
         return U(x, y, z) * normalizeCoeff;
     }
 
-	// returns a random point inside the unit sphere
+    // returns a random point inside the unit sphere
     U randomPointInUnitSphere()
     {
         U pointOnUnitSphere = randomPointOnUnitSphere();
@@ -90,10 +90,10 @@ class randomStream : public randomStreamBase<float, vec3>
         rng = std::mt19937{rd()};
     }
 
-	randomStream(unsigned int seed) : randomStreamBase<float, vec3>()
-	{
-		rng = std::mt19937{ seed };
-	}
+    randomStream(unsigned int seed) : randomStreamBase<float, vec3>()
+    {
+        rng = std::mt19937{seed};
+    }
 
     virtual float rand01() override
     {
@@ -107,25 +107,25 @@ class randomStream : public randomStreamBase<float, vec3>
 // 64-bit random stream
 class randomStream_64 : public randomStreamBase<double, vec3_64>
 {
-public:
-	randomStream_64() : randomStreamBase<double, vec3_64>()
-	{
-		std::random_device rd{};
-		rng = std::mt19937_64{ rd() };
-	}
+  public:
+    randomStream_64() : randomStreamBase<double, vec3_64>()
+    {
+        std::random_device rd{};
+        rng = std::mt19937_64{rd()};
+    }
 
-	randomStream_64(unsigned int seed) : randomStreamBase<double, vec3_64>()
-	{
-		rng = std::mt19937_64{ seed };
-	}
+    randomStream_64(unsigned int seed) : randomStreamBase<double, vec3_64>()
+    {
+        rng = std::mt19937_64{seed};
+    }
 
-	virtual double rand01() override
-	{
-		return distribution(rng);
-	}
+    virtual double rand01() override
+    {
+        return distribution(rng);
+    }
 
-private:
-	std::mt19937_64 rng;
+  private:
+    std::mt19937_64 rng;
 };
 
 // global random stream (32-bit)
@@ -152,7 +152,7 @@ bool coinFlip()
 // returns a random index given a container size
 uint32_t randIndex(size_t size)
 {
-	return gRandom.randIndex(size);
+    return gRandom.randIndex(size);
 }
 
 // returns a random direction of length 1

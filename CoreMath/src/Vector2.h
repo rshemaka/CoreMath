@@ -42,7 +42,7 @@ class t_vec2
     // anti-clockwise, radians
     inline void rotate(T rad);
 
-	inline t_vec2<T> getPerpendicular() const;
+    inline t_vec2<T> getPerpendicular() const;
 
     inline std::ostream& operator<<(std::ostream& os);
 
@@ -83,7 +83,7 @@ inline t_vec2<T> operator/(const t_vec2<T>& v, float t)
 template <class T>
 inline float operator|(const t_vec2<T>& v1, const t_vec2<T>& v2)
 {
-	return v1.dot(v2);
+    return v1.dot(v2);
 }
 #pragma endregion
 
@@ -154,10 +154,10 @@ inline void t_vec2<T>::rotate(T rad)
     x = (cos * oldX) - (sin * oldY);
     y = (sin * oldX) - (cos * oldY);
 }
-template<class T>
+template <class T>
 inline t_vec2<T> t_vec2<T>::getPerpendicular() const
 {
-	return t_vec2<T>(-y, x);
+    return t_vec2<T>(-y, x);
 }
 #pragma endregion
 

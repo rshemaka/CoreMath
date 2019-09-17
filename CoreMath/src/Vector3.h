@@ -79,7 +79,7 @@ inline t_vec3<T> operator/(const t_vec3<T>& v, float t)
 template <class T>
 inline float operator|(const t_vec3<T>& v1, const t_vec3<T>& v2)
 {
-	return v1.dot(v2);
+    return v1.dot(v2);
 }
 #pragma endregion
 
@@ -157,7 +157,7 @@ inline t_vec3<T> t_vec3<T>::cross(const t_vec3<T>& v2)
 template <class T>
 inline std::ostream& t_vec3<T>::operator<<(std::ostream& os)
 {
-	os << "<" << x << ", " << y << ", " << z << ">";
+    os << "<" << x << ", " << y << ", " << z << ">";
     return os;
 }
 

@@ -3,11 +3,11 @@
 
 #pragma once
 #include "MathHelpers.h"
+#include "Vector2.h"
 #include "Vector3.h"
 #include <random>
 
-// disabling 'loss of precision' warnings as literals will be typed w/ double
-// precision
+// disabling 'loss of precision' warnings as literals will be typed w/ double precision
 #pragma warning(push)
 #pragma warning(disable : 4244)
 
@@ -15,7 +15,7 @@
 //
 // float & double precision currently supported.
 // mersenne twister engine, uniform distribution.
-template <class T, class U>
+template <class T, class VEC2, class VEC3>
 class randomStreamBase
 {
   public:
@@ -47,9 +47,25 @@ class randomStreamBase
     }
 
     // returns a random direction of length 1
-    U randomPointOnUnitSphere()
+    VEC2 randomPointOnUnitCircle()
     {
-        // Muller (1959) method
+        VEC2 point = VEC2(1.0, 0.0);
+        point.rotate(randRange(0.0, TwoPi));
+        return point;
+    }
+
+    // returns a random point inside the unit circle
+    VEC2 randomPointInUnitCircle()
+    {
+        VEC2 point = VEC2(randRange(-1.0, 1.0), 0.0);
+        point.rotate(randRange(0.0, Pi));
+        return point;
+    }
+
+    // returns a random direction of length 1
+    VEC3 randomPointOnUnitSphere()
+    {
+        // Muller (1959) method, has problem w/ poles in uniform distribution?
         // https://dl.acm.org/citation.cfm?id=377946
         T x = randRange(-1.0, 1.0);
         T y = randRange(-1.0, 1.0);
@@ -61,13 +77,13 @@ class randomStreamBase
             lengthSquared = 1.0;
         }
         T normalizeCoeff = (T)1.0 / sqrt(lengthSquared);
-        return U(x, y, z) * normalizeCoeff;
+        return VEC3(x, y, z) * normalizeCoeff;
     }
 
     // returns a random point inside the unit sphere
-    U randomPointInUnitSphere()
+    VEC3 randomPointInUnitSphere()
     {
-        U pointOnUnitSphere = randomPointOnUnitSphere();
+        VEC3 pointOnUnitSphere = randomPointOnUnitSphere();
         return pointOnUnitSphere * rand01();
     }
 
@@ -81,16 +97,16 @@ class randomStreamBase
 };
 
 // 32-bit random stream
-class randomStream : public randomStreamBase<float, vec3>
+class randomStream : public randomStreamBase<float, vec2, vec3>
 {
   public:
-    randomStream() : randomStreamBase<float, vec3>()
+    randomStream() : randomStreamBase<float, vec2, vec3>()
     {
         std::random_device rd{};
         rng = std::mt19937{rd()};
     }
 
-    randomStream(unsigned int seed) : randomStreamBase<float, vec3>()
+    randomStream(unsigned int seed) : randomStreamBase<float, vec2, vec3>()
     {
         rng = std::mt19937{seed};
     }
@@ -105,16 +121,16 @@ class randomStream : public randomStreamBase<float, vec3>
 };
 
 // 64-bit random stream
-class randomStream_64 : public randomStreamBase<double, vec3_64>
+class randomStream_64 : public randomStreamBase<double, vec2_64, vec3_64>
 {
   public:
-    randomStream_64() : randomStreamBase<double, vec3_64>()
+    randomStream_64() : randomStreamBase<double, vec2_64, vec3_64>()
     {
         std::random_device rd{};
         rng = std::mt19937_64{rd()};
     }
 
-    randomStream_64(unsigned int seed) : randomStreamBase<double, vec3_64>()
+    randomStream_64(unsigned int seed) : randomStreamBase<double, vec2_64, vec3_64>()
     {
         rng = std::mt19937_64{seed};
     }
@@ -153,6 +169,18 @@ bool coinFlip()
 uint32_t randIndex(size_t size)
 {
     return gRandom.randIndex(size);
+}
+
+// returns a random direction of length 1
+vec2 randomPointOnUnitCircle()
+{
+    return gRandom.randomPointOnUnitCircle();
+}
+
+// returns a random point inside the unit circle
+vec2 randomPointInUnitCircle()
+{
+    return gRandom.randomPointInUnitCircle();
 }
 
 // returns a random direction of length 1

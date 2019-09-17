@@ -117,7 +117,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\KDTree.h" />
     <ClInclude Include="src\MathHelpers.h" />
     <ClInclude Include="src\PoissonDiskSampling.h" />
     <ClInclude Include="src\Quaternion.h" />

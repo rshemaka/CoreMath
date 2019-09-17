@@ -42,7 +42,6 @@ class t_vec2
     // anti-clockwise, radians
     inline void rotate(T rad);
 
-    // anti-clockwise
     inline t_vec2<T> getPerpendicular() const;
 
     inline std::ostream& operator<<(std::ostream& os);

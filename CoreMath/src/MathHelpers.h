@@ -154,4 +154,21 @@ namespace MathT
     {
         return std::floor(number);
     }
+
+    // templated epsilon
+    template <class T>
+    constexpr inline T epsilon()
+    {
+        throw std::logic_error("Templated epsilon should be specialized for all template types.");
+    }
+    template <>
+    constexpr inline float epsilon()
+    {
+        return FLT_EPSILON;
+    }
+    template <>
+    constexpr inline double epsilon()
+    {
+        return DBL_EPSILON;
+    }
 } // namespace MathT

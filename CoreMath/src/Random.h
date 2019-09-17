@@ -11,8 +11,7 @@
 #pragma warning(push)
 #pragma warning(disable : 4244)
 
-// random stream
-//
+// random stream abstract base
 // float & double precision currently supported.
 // mersenne twister engine, uniform distribution.
 template <class T, class VEC2, class VEC3>
@@ -42,7 +41,7 @@ class randomStreamBase
         if (size == 0)
             return 0;
 
-        T t = randRange(0, T(size));
+        T t = randRange(0, T(size - MathT::epsilon<T>()));
         return uint32_t(MathT::floor<T>(t));
     }
 

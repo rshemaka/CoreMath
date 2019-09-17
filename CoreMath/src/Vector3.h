@@ -8,8 +8,7 @@
 
 // 3d arithmetic vector
 //
-// float & double precision currently supported. 32bit fixed point in the
-// future, hopefully.
+// float & double precision currently supported. 32bit fixed point in the future, hopefully.
 //
 // see the end of the file for ease-of-use typedefs.
 // in general, use 'vec3' as the type around your code.
@@ -76,6 +75,11 @@ template <class T>
 inline t_vec3<T> operator/(const t_vec3<T>& v, float t)
 {
     return t_vec3<T>(v.x / t, v.y / t, v.z / t);
+}
+template <class T>
+inline float operator|(const t_vec3<T>& v1, const t_vec3<T>& v2)
+{
+	return v1.dot(v2);
 }
 #pragma endregion
 
@@ -153,7 +157,7 @@ inline t_vec3<T> t_vec3<T>::cross(const t_vec3<T>& v2)
 template <class T>
 inline std::ostream& t_vec3<T>::operator<<(std::ostream& os)
 {
-    os << x << " " << y << " " << z;
+	os << "<" << x << ", " << y << ", " << z << ">";
     return os;
 }
 

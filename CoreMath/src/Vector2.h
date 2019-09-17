@@ -37,10 +37,12 @@ class t_vec2
     static inline T dot(const t_vec2<T>& v1, const t_vec2<T>& v2);
     inline T dot(const t_vec2<T>& v2);
 
-    // anti-clockwise
+    // anti-clockwise, radians
     static inline t_vec2<T> rotate(const t_vec2<T>& v1, T rad);
-    // anti-clockwise
-    inline void rotate(T degrees);
+    // anti-clockwise, radians
+    inline void rotate(T rad);
+
+	inline t_vec2<T> getPerpendicular() const;
 
     inline std::ostream& operator<<(std::ostream& os);
 
@@ -77,6 +79,11 @@ template <class T>
 inline t_vec2<T> operator/(const t_vec2<T>& v, float t)
 {
     return t_vec2<T>(v.x / t, v.y / t);
+}
+template <class T>
+inline float operator|(const t_vec2<T>& v1, const t_vec2<T>& v2)
+{
+	return v1.dot(v2);
 }
 #pragma endregion
 
@@ -135,7 +142,7 @@ inline t_vec2<T> t_vec2<T>::rotate(const t_vec2<T>& v1, T rad)
 {
     T cos = MathT::cos<T>(rad);
     T sin = MathT::sin<T>(rad);
-    return t_vec2<T>((cos * x) - (sin * y), (sin * x) - (cos * y));
+    return t_vec2<T>((cos * v1.x) - (sin * v1.y), (sin * v1.x) - (cos * v1.y));
 }
 template <class T>
 inline void t_vec2<T>::rotate(T rad)
@@ -147,13 +154,18 @@ inline void t_vec2<T>::rotate(T rad)
     x = (cos * oldX) - (sin * oldY);
     y = (sin * oldX) - (cos * oldY);
 }
+template<class T>
+inline t_vec2<T> t_vec2<T>::getPerpendicular() const
+{
+	return t_vec2<T>(-y, x);
+}
 #pragma endregion
 
 #pragma region Member_Operators
 template <class T>
 inline std::ostream& t_vec2<T>::operator<<(std::ostream& os)
 {
-    os << x << " " << y;
+    os << "<" << x << ", " << y << ">";
     return os;
 }
 
@@ -208,7 +220,5 @@ inline t_vec2<T>& t_vec2<T>::operator/=(T t)
 
 typedef t_vec2<float> vec2_32;
 typedef t_vec2<double> vec2_64;
-
-typedef t_vec2<uint16_t> index2;
 
 typedef vec2_32 vec2;

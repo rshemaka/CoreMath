@@ -43,7 +43,7 @@ int generatePoissonDiskNoise1D(std::vector<float>& outNoise, float rangeMin, flo
         outNoise.push_back(latestSample);
     }
 
-    return outNoise.size();
+    return static_cast<int>(outNoise.size());
 }
 
 // generates blue noise given a bounding range and minimum spacing
@@ -134,7 +134,7 @@ int generatePoissonDiskNoise2D(std::vector<vec2>& outNoise, vec2 rangeMin, vec2 
 
             // "if a point is adequately far from existing samples, emit it as the next sample and add it to the active list"
             uint32_t& outNoiseIndex = grid[candidateIndex.x][candidateIndex.y];
-            outNoiseIndex = (uint32_t)outNoise.size();
+            outNoiseIndex = static_cast<uint32_t>(outNoise.size());
             outNoise.push_back(candidate);
             activeSamples.push_back(outNoiseIndex);
             neighborPlaced = true;
@@ -148,5 +148,5 @@ int generatePoissonDiskNoise2D(std::vector<vec2>& outNoise, vec2 rangeMin, vec2 
         }
     } while (activeSamples.size() > 0);
 
-    return outNoise.size();
+	return static_cast<int>(outNoise.size());
 }

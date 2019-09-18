@@ -15,10 +15,11 @@
 // Fast Poisson Disk Sampling in Arbitrary Dimensions
 // https://www.cs.ubc.ca/~rbridson/docs/bridson-siggraph07-poissondisk.pdf
 
-// given a bounding range, generate an undetermined number of random samples w/ a minimum spacing using Poisson disks
-void generatePoissonDiskSamples1D(std::vector<float>& outSamples, float rangeMin, float rangeMax, float minDist)
+// generates blue noise given a bounding range and minimum spacing
+// number of
+void generatePoissonDiskNoise1D(std::vector<float>& outNoise, float rangeMin, float rangeMax, float minDist)
 {
-    outSamples.empty();
+    outNoise.empty();
 
     if (rangeMin > rangeMax)
         return;
@@ -26,26 +27,26 @@ void generatePoissonDiskSamples1D(std::vector<float>& outSamples, float rangeMin
     // not enough room to scatter two points? just toss a random sample in and return
     if ((rangeMax - rangeMin) < minDist)
     {
-        outSamples.push_back(randRange(rangeMin, rangeMax));
+        outNoise.push_back(randRange(rangeMin, rangeMax));
         return;
     }
 
     // 1d blue noise can simply march from one end to the other
     float latestSample = randRange(rangeMin, rangeMin + minDist);
-    outSamples.push_back(latestSample);
+    outNoise.push_back(latestSample);
     while (rangeMax - latestSample > minDist)
     {
         float sampleMin = latestSample + minDist;
         float sampleMax = fmin(sampleMin + minDist, rangeMax);
         latestSample = randRange(sampleMin, sampleMax);
-        outSamples.push_back(latestSample);
+        outNoise.push_back(latestSample);
     }
 }
 
 // given a bounding range, generate an undetermined number of random points w/ a minimum spacing using Poisson disks
-void calculatePoissonDiskSamples2D(std::vector<vec2>& outSamples, vec2 rangeMin, vec2 rangeMax, float minDist, int sampleLimit = 30)
+void generatePoissonDiskNoise2D(std::vector<vec2>& outNoise, vec2 rangeMin, vec2 rangeMax, float minDist, int sampleLimit = 30)
 {
-    outSamples.empty();
+    outNoise.empty();
 
     if (rangeMin.x > rangeMax.x || rangeMin.y > rangeMax.y)
         return;
@@ -54,7 +55,7 @@ void calculatePoissonDiskSamples2D(std::vector<vec2>& outSamples, vec2 rangeMin,
     const float cellSize = minDist / sqrtf(2);
     const int xCells = int(ceilf(rangeSize.x / cellSize));
     const int yCells = int(ceilf(rangeSize.y / cellSize));
-    outSamples.reserve(xCells * yCells);
+    outNoise.reserve(xCells * yCells);
 
     // 2d spatial grid
     std::vector<std::vector<uint32_t>> grid(xCells, std::vector<uint32_t>(yCells, UINT32_MAX));
@@ -72,12 +73,12 @@ void calculatePoissonDiskSamples2D(std::vector<vec2>& outSamples, vec2 rangeMin,
     // add the first sample at random
     {
         const vec2 firstSample = vec2(randRange(rangeMin.x, rangeMax.x), randRange(rangeMin.y, rangeMin.y));
-        outSamples.push_back(firstSample);
+        outNoise.push_back(firstSample);
         const index2 firstIndex = calculateGridCell(firstSample);
         grid[firstIndex.x][firstIndex.y] = 0;
     }
 
-    // search boundary, stores an index into the outSamples array
+    // search boundary, stores an index into the outNoise array
     std::vector<uint32_t> activeSamples;
     activeSamples.push_back(0);
 
@@ -85,8 +86,8 @@ void calculatePoissonDiskSamples2D(std::vector<vec2>& outSamples, vec2 rangeMin,
     do
     {
         // "while the active list is not empty, choose a random index from it (i)"
-        const uint32_t randomSampleIndex = randIndex(activeSamples.size());
-        const vec2 randomSample = outSamples[randomSampleIndex];
+        const uint32_t currentNoiseIndex = randIndex(activeSamples.size());
+        const vec2 currentSample = outNoise[currentNoiseIndex];
 
         bool neighborPlaced = false;
         // "generate up to k points ..."
@@ -94,7 +95,7 @@ void calculatePoissonDiskSamples2D(std::vector<vec2>& outSamples, vec2 rangeMin,
         {
             // "... uniformly from the spherical annulus between radius r and 2r around x[i]"
             const vec2 randomThrow = randomPointOnUnitCircle() * randRange(minDist, 2.f * minDist);
-            const vec2 candidate = randomSample + randomThrow;
+            const vec2 candidate = currentSample + randomThrow;
             const index2 candidateIndex = calculateGridCell(candidate);
             if (!isValidIndex(candidateIndex))
                 continue;
@@ -114,7 +115,7 @@ void calculatePoissonDiskSamples2D(std::vector<vec2>& outSamples, vec2 rangeMin,
                     const uint32_t testOutput = grid[testIndex.x][testIndex.y];
                     if (testOutput != UINT32_MAX)
                     {
-                        float distSqr = (outSamples[testOutput] - candidate).getLengthSquared();
+                        float distSqr = (outNoise[testOutput] - candidate).getLengthSquared();
                         if (distSqr < minDistSqr)
                         {
                             nearbySampleFound = true;
@@ -127,17 +128,17 @@ void calculatePoissonDiskSamples2D(std::vector<vec2>& outSamples, vec2 rangeMin,
                 continue;
 
             // "if a point is adequately far from existing samples, emit it as the next sample and add it to the active list"
-            uint32_t& outputIndex = grid[candidateIndex.x][candidateIndex.y];
-            outputIndex = (uint32_t)outSamples.size();
-            outSamples.push_back(candidate);
-            activeSamples.push_back(outputIndex);
+            uint32_t& outNoiseIndex = grid[candidateIndex.x][candidateIndex.y];
+            outNoiseIndex = (uint32_t)outNoise.size();
+            outNoise.push_back(candidate);
+            activeSamples.push_back(outNoiseIndex);
             neighborPlaced = true;
             break;
         }
         // "if after k attempts no such point is found, instead remove i from the active list."
         if (!neighborPlaced)
         {
-            std::swap(activeSamples.back(), activeSamples[randomSampleIndex]);
+            std::swap(activeSamples.back(), activeSamples[currentNoiseIndex]);
             activeSamples.pop_back();
         }
     } while (activeSamples.size() > 0);

@@ -16,19 +16,20 @@
 // https://www.cs.ubc.ca/~rbridson/docs/bridson-siggraph07-poissondisk.pdf
 
 // generates blue noise given a bounding range and minimum spacing
-// number of
-void generatePoissonDiskNoise1D(std::vector<float>& outNoise, float rangeMin, float rangeMax, float minDist)
+// amount of noise output is indeterminate
+// returns: number of points generated
+int generatePoissonDiskNoise1D(std::vector<float>& outNoise, float rangeMin, float rangeMax, float minDist)
 {
     outNoise.empty();
 
     if (rangeMin > rangeMax)
-        return;
+        return 0;
 
     // not enough room to scatter two points? just toss a random sample in and return
     if ((rangeMax - rangeMin) < minDist)
     {
         outNoise.push_back(randRange(rangeMin, rangeMax));
-        return;
+        return 1;
     }
 
     // 1d blue noise can simply march from one end to the other
@@ -41,15 +42,19 @@ void generatePoissonDiskNoise1D(std::vector<float>& outNoise, float rangeMin, fl
         latestSample = randRange(sampleMin, sampleMax);
         outNoise.push_back(latestSample);
     }
+
+    return outNoise.size();
 }
 
-// given a bounding range, generate an undetermined number of random points w/ a minimum spacing using Poisson disks
-void generatePoissonDiskNoise2D(std::vector<vec2>& outNoise, vec2 rangeMin, vec2 rangeMax, float minDist, int sampleLimit = 30)
+// generates blue noise given a bounding range and minimum spacing
+// amount of noise output is indeterminate
+// returns: number of points generated
+int generatePoissonDiskNoise2D(std::vector<vec2>& outNoise, vec2 rangeMin, vec2 rangeMax, float minDist, int sampleLimit = 30)
 {
     outNoise.empty();
 
     if (rangeMin.x > rangeMax.x || rangeMin.y > rangeMax.y)
-        return;
+        return 0;
 
     const vec2 rangeSize = rangeMax - rangeMin;
     const float cellSize = minDist / sqrtf(2);
@@ -87,7 +92,7 @@ void generatePoissonDiskNoise2D(std::vector<vec2>& outNoise, vec2 rangeMin, vec2
     {
         // "while the active list is not empty, choose a random index from it (i)"
         const uint32_t currentNoiseIndex = randIndex(activeSamples.size());
-        const vec2 currentSample = outNoise[currentNoiseIndex];
+        const vec2& currentSample = outNoise[currentNoiseIndex];
 
         bool neighborPlaced = false;
         // "generate up to k points ..."
@@ -142,4 +147,6 @@ void generatePoissonDiskNoise2D(std::vector<vec2>& outNoise, vec2 rangeMin, vec2
             activeSamples.pop_back();
         }
     } while (activeSamples.size() > 0);
+
+    return outNoise.size();
 }

@@ -2,8 +2,8 @@
 // https://github.com/rshemaka/CoreMath
 
 #pragma once
-#include <cmath>
 #include <cfloat>
+#include <cmath>
 
 constexpr float Pi = 3.141592f;
 constexpr float TwoPi = 6.2831853f;
@@ -54,38 +54,38 @@ namespace MathT
         return std::abs(x);
     }
 
-	// templated floor
-	template <class T>
-	inline T floor(T number)
-	{
-		throw std::logic_error("Templated floor should be specialized for all template types.");
-	}
-	template <>
-	inline float floor(float number)
-	{
-		return std::floorf(number);
-	}
-	template <>
-	inline double floor(double number)
-	{
-		return std::floor(number);
-	}
+    // templated floor
+    template <class T>
+    inline T floor(T number)
+    {
+        throw std::logic_error("Templated floor should be specialized for all template types.");
+    }
+    template <>
+    inline float floor(float number)
+    {
+        return std::floorf(number);
+    }
+    template <>
+    inline double floor(double number)
+    {
+        return std::floor(number);
+    }
 
-	template <class T>
-	inline T sqrt(T x)
-	{
-		throw std::logic_error("Templated sqrt should be specialized for all template types.");
-	}
-	template <>
-	inline float sqrt(float number)
-	{
-		return std::sqrtf(number);
-	}
-	template <>
-	inline double sqrt(double number)
-	{
-		return std::sqrt(number);
-	}
+    template <class T>
+    inline T sqrt(T x)
+    {
+        throw std::logic_error("Templated sqrt should be specialized for all template types.");
+    }
+    template <>
+    inline float sqrt(float number)
+    {
+        return std::sqrtf(number);
+    }
+    template <>
+    inline double sqrt(double number)
+    {
+        return std::sqrt(number);
+    }
 
     // templated cosine
     template <class T>

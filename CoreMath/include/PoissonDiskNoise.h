@@ -148,5 +148,5 @@ int generatePoissonDiskNoise2D(std::vector<vec2>& outNoise, vec2 rangeMin, vec2 
         }
     } while (activeSamples.size() > 0);
 
-	return static_cast<int>(outNoise.size());
+    return static_cast<int>(outNoise.size());
 }

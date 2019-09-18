@@ -21,7 +21,7 @@ class KDTree
     const vec3* findNearestNeighbor(const vec3& inVec);
 
   protected:
-	typedef std::vector<const vec3*> tConstPointRefs;
+    typedef std::vector<const vec3*> tConstPointRefs;
 
     // protected recursive constructor
     KDTree(tConstPointRefs& inPoints, int depth);

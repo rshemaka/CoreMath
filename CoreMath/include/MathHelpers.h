@@ -2,7 +2,8 @@
 // https://github.com/rshemaka/CoreMath
 
 #pragma once
-#include <Math.h>
+#include <cmath>
+#include <cfloat>
 
 constexpr float Pi = 3.141592f;
 constexpr float TwoPi = 6.2831853f;
@@ -52,6 +53,39 @@ namespace MathT
     {
         return std::abs(x);
     }
+
+	// templated floor
+	template <class T>
+	inline T floor(T number)
+	{
+		throw std::logic_error("Templated floor should be specialized for all template types.");
+	}
+	template <>
+	inline float floor(float number)
+	{
+		return std::floorf(number);
+	}
+	template <>
+	inline double floor(double number)
+	{
+		return std::floor(number);
+	}
+
+	template <class T>
+	inline T sqrt(T x)
+	{
+		throw std::logic_error("Templated sqrt should be specialized for all template types.");
+	}
+	template <>
+	inline float sqrt(float number)
+	{
+		return std::sqrtf(number);
+	}
+	template <>
+	inline double sqrt(double number)
+	{
+		return std::sqrt(number);
+	}
 
     // templated cosine
     template <class T>
@@ -136,23 +170,6 @@ namespace MathT
     inline double copysign(double number, double sign)
     {
         return std::copysign(number, sign);
-    }
-
-    // templated floor
-    template <class T>
-    inline T floor(T number)
-    {
-        throw std::logic_error("Templated floor should be specialized for all template types.");
-    }
-    template <>
-    inline float floor(float number)
-    {
-        return std::floorf(number);
-    }
-    template <>
-    inline double floor(double number)
-    {
-        return std::floor(number);
     }
 
     // templated epsilon

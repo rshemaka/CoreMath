@@ -48,7 +48,7 @@ class randomStreamBase
     // returns a random direction of length 1
     VEC2 randomPointOnUnitCircle()
     {
-        VEC2 point = VEC2(1.0, 0.0);
+        VEC2 point(1.0, 0.0);
         point.rotate(randRange(0.0, TwoPi));
         return point;
     }
@@ -56,7 +56,7 @@ class randomStreamBase
     // returns a random point inside the unit circle
     VEC2 randomPointInUnitCircle()
     {
-        VEC2 point = VEC2(randRange(-1.0, 1.0), 0.0);
+        VEC2 point(randRange(-1.0, 1.0), 0.0);
         point.rotate(randRange(0.0, Pi));
         return point;
     }
@@ -75,7 +75,7 @@ class randomStreamBase
             x = 1.0;
             lengthSquared = 1.0;
         }
-        T normalizeCoeff = (T)1.0 / sqrt(lengthSquared);
+        T normalizeCoeff = (T)1.0 / MathT::sqrt<T>(lengthSquared);
         return VEC3(x, y, z) * normalizeCoeff;
     }
 

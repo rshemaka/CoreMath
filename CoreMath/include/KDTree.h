@@ -1,6 +1,7 @@
 // Richard Shemaka - 2019
 // https://github.com/rshemaka/CoreMath
 
+#pragma once
 #include "Vector3.h"
 #include <vector>
 

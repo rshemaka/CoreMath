@@ -8,6 +8,7 @@ PointerAlignment: Left
 BreakBeforeBraces: Custom
 ColumnLimit: 256
 NamespaceIndentation: All
+ForEachMacros: [TEST_CLASS, TEST_METHOD]
 BraceWrapping:
   AfterClass: true
   AfterControlStatement: true

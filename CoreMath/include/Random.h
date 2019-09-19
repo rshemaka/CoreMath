@@ -144,52 +144,52 @@ class randomStream_64 : public randomStreamBase<double, vec2_64, vec3_64>
 };
 
 // global random stream (32-bit)
-randomStream gRandom;
+static randomStream gRandom;
 
 // returns a random number in the range of [0.0, 1.0)
-float rand01()
+inline float rand01()
 {
     return gRandom.rand01();
 }
 
 // returns a random number in the specified range of [min, max)
-float randRange(float min, float max)
+inline float randRange(float min, float max)
 {
     return gRandom.randRange(min, max);
 }
 
 // returns a random true or false
-bool coinFlip()
+inline bool coinFlip()
 {
     return gRandom.coinFlip();
 }
 
 // returns a random index given a container size
-uint32_t randIndex(size_t size)
+inline uint32_t randIndex(size_t size)
 {
     return gRandom.randIndex(size);
 }
 
 // returns a random direction of length 1
-vec2 randomPointOnUnitCircle()
+inline vec2 randomPointOnUnitCircle()
 {
     return gRandom.randomPointOnUnitCircle();
 }
 
 // returns a random point inside the unit circle
-vec2 randomPointInUnitCircle()
+inline vec2 randomPointInUnitCircle()
 {
     return gRandom.randomPointInUnitCircle();
 }
 
 // returns a random direction of length 1
-vec3 randomPointOnUnitSphere()
+inline vec3 randomPointOnUnitSphere()
 {
     return gRandom.randomPointOnUnitSphere();
 }
 
 // returns a random point inside the unit sphere
-vec3 randomPointInUnitSphere()
+inline vec3 randomPointInUnitSphere()
 {
     return gRandom.randomPointInUnitSphere();
 }

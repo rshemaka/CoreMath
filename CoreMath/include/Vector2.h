@@ -44,8 +44,6 @@ class t_vec2
 
     inline t_vec2<T> getPerpendicular() const;
 
-    inline std::ostream& operator<<(std::ostream& os);
-
     inline t_vec2<T>& operator+=(const t_vec2<T>& v2);
     inline t_vec2<T>& operator-=(const t_vec2<T>& v2);
     inline t_vec2<T>& operator*=(const t_vec2<T>& v2);
@@ -84,6 +82,16 @@ template <class T>
 inline float operator|(const t_vec2<T>& v1, const t_vec2<T>& v2)
 {
     return v1.dot(v2);
+}
+template <class T>
+inline std::ostream& operator<<(std::ostream& os, const t_vec2<T>& v)
+{
+    return os << "<" << v.x << ", " << v.y << ">";
+}
+template <class T>
+inline std::wostream& operator<<(std::wostream& os, const t_vec2<T>& v)
+{
+    return os << "<" << v.x << ", " << v.y << ">";
 }
 #pragma endregion
 
@@ -162,13 +170,6 @@ inline t_vec2<T> t_vec2<T>::getPerpendicular() const
 #pragma endregion
 
 #pragma region Member_Operators
-template <class T>
-inline std::ostream& t_vec2<T>::operator<<(std::ostream& os)
-{
-    os << "<" << x << ", " << y << ">";
-    return os;
-}
-
 template <class T>
 inline t_vec2<T>& t_vec2<T>::operator+=(const t_vec2<T>& v2)
 {

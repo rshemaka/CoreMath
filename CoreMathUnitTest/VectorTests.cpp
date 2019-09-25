@@ -82,6 +82,20 @@ namespace CoreMathUnitTest
             vecA -= vecB;
             Assert::IsTrue(vecA.isEqual(vecC));
         }
+
+        TEST_METHOD (StreamOutput)
+        {
+            vec2 vec(1.f, 1.f);
+            std::ostringstream outputStream;
+            outputStream << vec;
+            std::string outputString = outputStream.str();
+            Assert::IsTrue(outputString.size() > 0);
+
+            std::wstringstream wideOutputStream;
+            wideOutputStream << vec;
+            std::wstring wideOutputString = wideOutputStream.str();
+            Assert::IsTrue(wideOutputString.size() > 0);
+        }
     };
 
     TEST_CLASS (Vector3Tests)
@@ -157,6 +171,20 @@ namespace CoreMathUnitTest
 
             vecA -= vecB;
             Assert::IsTrue(vecA.isEqual(vecC));
+        }
+
+        TEST_METHOD (StreamOutput)
+        {
+            vec3 vec(1.f, 1.f, 1.f);
+            std::ostringstream outputStream;
+            outputStream << vec;
+            std::string outputString = outputStream.str();
+            Assert::IsTrue(outputString.size() > 0);
+
+            std::wstringstream wideOutputStream;
+            wideOutputStream << vec;
+            std::wstring wideOutputString = wideOutputStream.str();
+            Assert::IsTrue(wideOutputString.size() > 0);
         }
     };
 } // namespace CoreMathUnitTest

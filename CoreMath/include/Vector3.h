@@ -40,8 +40,6 @@ class t_vec3
     static inline t_vec3<T> cross(const t_vec3<T>& v1, const t_vec3<T>& v2);
     inline t_vec3<T> cross(const t_vec3<T>& v2);
 
-    inline std::ostream& operator<<(std::ostream& os);
-
     inline t_vec3<T>& operator+=(const t_vec3<T>& v2);
     inline t_vec3<T>& operator-=(const t_vec3<T>& v2);
     inline t_vec3<T>& operator*=(const t_vec3<T>& v2);
@@ -80,6 +78,16 @@ template <class T>
 inline float operator|(const t_vec3<T>& v1, const t_vec3<T>& v2)
 {
     return v1.dot(v2);
+}
+template <class T>
+inline std::ostream& operator<<(std::ostream& os, const t_vec3<T>& v)
+{
+    return os << "<" << v.x << ", " << v.y << ", " << v.z << ">";
+}
+template <class T>
+inline std::wostream& operator<<(std::wostream& os, const t_vec3<T>& v)
+{
+    return os << "<" << v.x << ", " << v.y << ", " << v.z << ">";
 }
 #pragma endregion
 
@@ -154,13 +162,6 @@ inline t_vec3<T> t_vec3<T>::cross(const t_vec3<T>& v2)
 #pragma endregion
 
 #pragma region Member_Operators
-template <class T>
-inline std::ostream& t_vec3<T>::operator<<(std::ostream& os)
-{
-    os << "<" << x << ", " << y << ", " << z << ">";
-    return os;
-}
-
 template <class T>
 inline t_vec3<T>& t_vec3<T>::operator+=(const t_vec3<T>& v2)
 {

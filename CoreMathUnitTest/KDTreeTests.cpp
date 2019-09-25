@@ -6,6 +6,7 @@
 
 #include "KDTree.h"
 #include "Random.h"
+#include <string>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -17,8 +18,9 @@ namespace CoreMathUnitTest
         TEST_METHOD (NearestNeighbor)
         {
             // init a point cloud
-            constexpr int numPoints = 1000;
-            std::vector<vec3> pointCloud(numPoints);
+            constexpr int numPoints = 256;
+            std::vector<vec3> pointCloud;
+            pointCloud.reserve(numPoints);
             for (int i = 0; i != numPoints; ++i)
             {
                 pointCloud.push_back(vec3(rand01(), rand01(), rand01()));
@@ -31,25 +33,31 @@ namespace CoreMathUnitTest
             vec3 queryPoint(rand01(), rand01(), rand01());
 
             // naive query
-            vec3* bestNeighbor = nullptr;
+            vec3* pNearestNeighbor = nullptr;
             float smallestDistanceSqr = FLT_MAX;
             for (int i = 0; i != numPoints; ++i)
             {
-                vec3& point = pointCloud[i];
+                vec3& point = pointCloud.at(i);
                 vec3 delta = point - queryPoint;
                 float distanceSqr = delta.getLengthSquared();
                 if (distanceSqr < smallestDistanceSqr)
                 {
-                    bestNeighbor = &point;
+                    pNearestNeighbor = &point;
                     smallestDistanceSqr = distanceSqr;
                 }
             }
-            const vec3* pNearestNeighbor = bestNeighbor;
 
             // k-d tree query
             const vec3* pKDNearestNeighbor = kdTree.findNearestNeighbor(queryPoint);
 
-            Assert::IsTrue(pNearestNeighbor == pKDNearestNeighbor);
+            std::wstringstream outputStream;
+            outputStream << "\n"
+                         << "Query: " << queryPoint << "\n"
+                         << "Nearest neighbor: " << *pNearestNeighbor << "\n"
+                         << "K-D Tree Result: " << *pKDNearestNeighbor;
+            std::wstring outputString = outputStream.str();
+
+            Assert::IsTrue(pNearestNeighbor == pKDNearestNeighbor, outputString.c_str());
         }
     };
 } // namespace CoreMathUnitTest

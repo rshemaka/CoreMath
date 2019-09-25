@@ -83,6 +83,17 @@ namespace CoreMathUnitTest
             Assert::IsTrue(vecA.isEqual(vecC));
         }
 
+        TEST_METHOD (Length)
+        {
+            vec2 vecA(2.f, 0.f);
+            Assert::AreEqual(vecA.getLength(), 2.f);
+            Assert::AreEqual(vecA.getLengthSquared(), 4.f);
+
+            vec2 vecB(2.f, 2.f);
+            Assert::AreEqual(vecB.getLength(), sqrtf(4.f + 4.f));
+            Assert::AreEqual(vecB.getLengthSquared(), 4.f + 4.f);
+        }
+
         TEST_METHOD (StreamOutput)
         {
             vec2 vec(1.f, 1.f);
@@ -171,6 +182,17 @@ namespace CoreMathUnitTest
 
             vecA -= vecB;
             Assert::IsTrue(vecA.isEqual(vecC));
+        }
+
+        TEST_METHOD (Length)
+        {
+            vec3 vecA(2.f, 0.f, 0.f);
+            Assert::AreEqual(vecA.getLength(), 2.f);
+            Assert::AreEqual(vecA.getLengthSquared(), 4.f);
+
+            vec3 vecB(2.f, 2.f, 2.f);
+            Assert::AreEqual(vecB.getLength(), sqrtf(4.f + 4.f + 4.f));
+            Assert::AreEqual(vecB.getLengthSquared(), 4.f + 4.f + 4.f);
         }
 
         TEST_METHOD (StreamOutput)

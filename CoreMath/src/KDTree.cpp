@@ -116,7 +116,7 @@ void KDTree::init(tConstPointRefs& inPoints, int depth)
     std::sort(inPoints.begin(), inPoints.end(), compare);
 
     // extract median
-    uint32_t medianIndex = (uint32_t)inPoints.size() / 2;
+    uint32_t medianIndex = static_cast<uint32_t>(inPoints.size()) / 2;
     pData = inPoints[medianIndex];
 
     // subdivide remaining points

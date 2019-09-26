@@ -2,11 +2,13 @@
 // https://github.com/rshemaka/CoreMath
 
 // Sources:
-// https://en.wikipedia.org/wiki/Quaternion
+// https://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation
 // https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
+// https://gamedev.stackexchange.com/questions/28395/rotating-vector3-by-a-quaternion
 
 #pragma once
 #include "MathHelpers.h"
+#include "Vector3.h"
 
 // disabling 'loss of precision' warnings as literals will be typed w/ double precision
 #pragma warning(push)
@@ -14,8 +16,7 @@
 
 // quaternion representation of 3d rotation
 //
-// float & double precision currently supported. 32bit fixed point in the
-// future, hopefully.
+// float & double precision currently supported. 32bit fixed point in the future, hopefully.
 //
 // see the end of the file for ease-of-use typedefs.
 // in general, use 'quat' as the type around your code.
@@ -25,43 +26,90 @@ class t_quat
 {
   public:
     t_quat() {}
+    t_quat(T inRoll, T inPitch, T inYaw); // input in degrees
+    t_quat(T inW, T inX, T inY, T inZ) : w(inW), x(inX), y(inY), z(inZ) {}
 
-    // arguments in degrees
-    static t_quat<T> makeFromEuler(T roll, T pitch, T yaw);
+    inline T getLength() const;
+    inline T getLengthSquared() const;
+
+    void normalize();
+    inline bool isUnit(T epsilon = 0.0001) const;
+    inline t_quat<T> getUnit() const;
+
+    t_vec3<T> rotateVector(const t_vec3<T>& v);
 
     // output in degrees
     void getEulerAngles(T& outRoll, T& outPitch, T& outYaw) const;
 
   private:
-    T w;
-    T x;
-    T y;
-    T z;
+    T w = 1.0;
+    T x = 0.0;
+    T y = 0.0;
+    T z = 0.0;
 };
 
-// arguments in degrees
 template <class T>
-inline t_quat<T> t_quat<T>::makeFromEuler(T roll, T pitch, T yaw)
+t_quat<T>::t_quat(T inRoll, T inPitch, T inYaw)
 {
-    roll *= DegToRads;
-    pitch *= DegToRads;
-    yaw *= DegToRads;
+    inRoll *= DegToRads;
+    inPitch *= DegToRads;
+    inYaw *= DegToRads;
 
-    T cr = MathT::cos<T>(roll * 0.5);
-    T sr = MathT::sin<T>(roll * 0.5);
-    T cp = MathT::cos<T>(pitch * 0.5);
-    T sp = MathT::sin<T>(pitch * 0.5);
-    T cy = MathT::cos<T>(yaw * 0.5);
-    T sy = MathT::sin<T>(yaw * 0.5);
+    T cr = MathT::cos<T>(inRoll * 0.5);
+    T sr = MathT::sin<T>(inRoll * 0.5);
+    T cp = MathT::cos<T>(inPitch * 0.5);
+    T sp = MathT::sin<T>(inPitch * 0.5);
+    T cy = MathT::cos<T>(inYaw * 0.5);
+    T sy = MathT::sin<T>(inYaw * 0.5);
 
-    t_quat<T> ret;
+    w = cy * cp * cr + sy * sp * sr;
+    x = cy * cp * sr - sy * sp * cr;
+    y = sy * cp * sr + cy * sp * cr;
+    z = sy * cp * cr - cy * sp * sr;
+}
 
-    ret.w = cy * cp * cr + sy * sp * sr;
-    ret.x = cy * cp * sr - sy * sp * cr;
-    ret.y = sy * cp * sr + cy * sp * cr;
-    ret.z = sy * cp * cr - cy * sp * sr;
+template <class T>
+inline T t_quat<T>::getLength() const
+{
+    return MathT::sqrt<T>(w * w + x * x + y * y + z * z);
+}
 
-    return ret;
+template <class T>
+inline T t_quat<T>::getLengthSquared() const
+{
+    return (w * w + x * x + y * y + z * z);
+}
+
+template <class T>
+inline void t_quat<T>::normalize()
+{
+    const T length = getLength();
+    w /= length;
+    x /= length;
+    y /= length;
+    z /= length;
+}
+
+template <class T>
+inline bool t_quat<T>::isUnit(T epsilon) const
+{
+    return (MathT::abs<T>(getLengthSquared() - 1) < epsilon);
+}
+
+template <class T>
+inline t_quat<T> t_quat<T>::getUnit() const
+{
+    t_quat outNorm = *this;
+    outNorm.normalize();
+    return outNorm;
+}
+
+template <class T>
+inline t_vec3<T> t_quat<T>::rotateVector(const t_vec3<T>& v)
+{
+    const t_vec3<T> u(x, y, z);
+    const float s = w;
+    return 2.0 * t_vec3<T>::dot(u, v) * u + (s * s - t_vec3<T>::dot(u, u)) * v + 2.0 * s * t_vec3<T>::cross(u, v);
 }
 
 // output in degrees

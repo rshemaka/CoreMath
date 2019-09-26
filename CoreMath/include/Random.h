@@ -15,10 +15,10 @@
 // float & double precision currently supported.
 // mersenne twister engine, uniform distribution.
 template <class T, class VEC2, class VEC3>
-class randomStreamBase
+class t_randomStream
 {
   public:
-    virtual ~randomStreamBase() {}
+    virtual ~t_randomStream() {}
 
     // returns a random number in the range of [0.0, 1.0)
     virtual T rand01() = 0;
@@ -87,7 +87,7 @@ class randomStreamBase
     }
 
   protected:
-    randomStreamBase()
+    t_randomStream()
     {
         distribution = std::uniform_real_distribution<T>(0.0, 1.0);
     }
@@ -96,16 +96,16 @@ class randomStreamBase
 };
 
 // 32-bit random stream
-class randomStream : public randomStreamBase<float, vec2, vec3>
+class randomStream : public t_randomStream<float, vec2, vec3>
 {
   public:
-    randomStream() : randomStreamBase<float, vec2, vec3>()
+    randomStream() : t_randomStream<float, vec2, vec3>()
     {
         std::random_device rd{};
         rng = std::mt19937{rd()};
     }
 
-    randomStream(unsigned int seed) : randomStreamBase<float, vec2, vec3>()
+    randomStream(unsigned int seed) : t_randomStream<float, vec2, vec3>()
     {
         rng = std::mt19937{seed};
     }
@@ -120,16 +120,16 @@ class randomStream : public randomStreamBase<float, vec2, vec3>
 };
 
 // 64-bit random stream
-class randomStream_64 : public randomStreamBase<double, vec2_64, vec3_64>
+class randomStream_64 : public t_randomStream<double, vec2_64, vec3_64>
 {
   public:
-    randomStream_64() : randomStreamBase<double, vec2_64, vec3_64>()
+    randomStream_64() : t_randomStream<double, vec2_64, vec3_64>()
     {
         std::random_device rd{};
         rng = std::mt19937_64{rd()};
     }
 
-    randomStream_64(unsigned int seed) : randomStreamBase<double, vec2_64, vec3_64>()
+    randomStream_64(unsigned int seed) : t_randomStream<double, vec2_64, vec3_64>()
     {
         rng = std::mt19937_64{seed};
     }

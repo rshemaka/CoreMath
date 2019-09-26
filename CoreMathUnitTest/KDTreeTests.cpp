@@ -29,35 +29,39 @@ namespace CoreMathUnitTest
             // precompute spacial indexing
             KDTree kdTree(pointCloud);
 
-            // generate a query vector
-            vec3 queryPoint(rand01(), rand01(), rand01());
-
-            // naive query
-            vec3* pNearestNeighbor = nullptr;
-            float smallestDistanceSqr = FLT_MAX;
-            for (int i = 0; i != numPoints; ++i)
+            // run this test a number of rounds
+            constexpr int testRounds = 256;
+            for (int i = 0; i != testRounds; ++i)
             {
-                vec3& point = pointCloud.at(i);
-                vec3 delta = point - queryPoint;
-                float distanceSqr = delta.getLengthSquared();
-                if (distanceSqr < smallestDistanceSqr)
+                // generate a query vector
+                vec3 queryPoint(rand01(), rand01(), rand01());
+
+                // naive query
+                vec3* pNearestNeighbor = nullptr;
+                float smallestDistanceSqr = FLT_MAX;
+                for (int i = 0; i != numPoints; ++i)
                 {
-                    pNearestNeighbor = &point;
-                    smallestDistanceSqr = distanceSqr;
+                    vec3& point = pointCloud.at(i);
+                    vec3 delta = point - queryPoint;
+                    float distanceSqr = delta.getLengthSquared();
+                    if (distanceSqr < smallestDistanceSqr)
+                    {
+                        pNearestNeighbor = &point;
+                        smallestDistanceSqr = distanceSqr;
+                    }
                 }
+
+                // k-d tree query
+                const vec3* pKDNearestNeighbor = kdTree.findNearestNeighbor(queryPoint);
+
+                std::wstringstream outputStream;
+                outputStream << "\n"
+                             << "Query: " << queryPoint << "\n"
+                             << "Nearest neighbor: " << *pNearestNeighbor << "\n"
+                             << "K-D Tree Result: " << *pKDNearestNeighbor;
+
+                Assert::IsTrue(pNearestNeighbor == pKDNearestNeighbor, outputStream.str().c_str());
             }
-
-            // k-d tree query
-            const vec3* pKDNearestNeighbor = kdTree.findNearestNeighbor(queryPoint);
-
-            std::wstringstream outputStream;
-            outputStream << "\n"
-                         << "Query: " << queryPoint << "\n"
-                         << "Nearest neighbor: " << *pNearestNeighbor << "\n"
-                         << "K-D Tree Result: " << *pKDNearestNeighbor;
-            std::wstring outputString = outputStream.str();
-
-            Assert::IsTrue(pNearestNeighbor == pKDNearestNeighbor, outputString.c_str());
         }
     };
 } // namespace CoreMathUnitTest

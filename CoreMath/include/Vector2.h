@@ -4,7 +4,10 @@
 #pragma once
 #include "MathHelpers.h"
 #include <iostream>
-#include <stdexcept>
+
+// disabling 'loss of precision' warnings as literals will be typed w/ double precision
+#pragma warning(push)
+#pragma warning(disable : 4244)
 
 // 2d arithmetic vector
 //
@@ -22,8 +25,8 @@ class t_vec2
     t_vec2(T inT) : x(inT), y(inT) {}
     t_vec2(T inX, T inY) : x(inX), y(inY) {}
 
-    T x = 0;
-    T y = 0;
+    T x = 0.0;
+    T y = 0.0;
 
     inline T getLength() const;
     inline T getLengthSquared() const;
@@ -35,7 +38,7 @@ class t_vec2
     inline bool isEqual(const t_vec2<T>& v2, T epsilon = 0.0001) const;
 
     static inline T dot(const t_vec2<T>& v1, const t_vec2<T>& v2);
-    inline T dot(const t_vec2<T>& v2);
+    inline T dot(const t_vec2<T>& v2) const;
 
     // anti-clockwise, radians
     static inline t_vec2<T> rotate(const t_vec2<T>& v1, T rad);
@@ -99,7 +102,7 @@ inline std::wostream& operator<<(std::wostream& os, const t_vec2<T>& v)
 template <class T>
 inline T t_vec2<T>::getLength() const
 {
-    return sqrt(x * x + y * y);
+    return MathT::sqrt<T>(x * x + y * y);
 }
 template <class T>
 inline T t_vec2<T>::getLengthSquared() const
@@ -141,7 +144,7 @@ inline T t_vec2<T>::dot(const t_vec2<T>& v1, const t_vec2<T>& v2)
     return (v1.x * v2.x) + (v1.y * v2.y);
 }
 template <class T>
-inline T t_vec2<T>::dot(const t_vec2<T>& v2)
+inline T t_vec2<T>::dot(const t_vec2<T>& v2) const
 {
     return (x * v2.x) + (y * v2.y);
 }
@@ -223,3 +226,5 @@ typedef t_vec2<float> vec2_32;
 typedef t_vec2<double> vec2_64;
 
 typedef vec2_32 vec2;
+
+#pragma warning(pop)

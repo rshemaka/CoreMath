@@ -4,7 +4,10 @@
 #pragma once
 #include "MathHelpers.h"
 #include <iostream>
-#include <stdexcept>
+
+// disabling 'loss of precision' warnings as literals will be typed w/ double precision
+#pragma warning(push)
+#pragma warning(disable : 4244)
 
 // 3d arithmetic vector
 //
@@ -35,10 +38,10 @@ class t_vec3
     inline bool isEqual(const t_vec3<T>& v2, T epsilon = 0.0001) const;
 
     static inline T dot(const t_vec3<T>& v1, const t_vec3<T>& v2);
-    inline T dot(const t_vec3<T>& v2);
+    inline T dot(const t_vec3<T>& v2) const;
 
     static inline t_vec3<T> cross(const t_vec3<T>& v1, const t_vec3<T>& v2);
-    inline t_vec3<T> cross(const t_vec3<T>& v2);
+    inline t_vec3<T> cross(const t_vec3<T>& v2) const;
 
     inline t_vec3<T>& operator+=(const t_vec3<T>& v2);
     inline t_vec3<T>& operator-=(const t_vec3<T>& v2);
@@ -95,7 +98,7 @@ inline std::wostream& operator<<(std::wostream& os, const t_vec3<T>& v)
 template <class T>
 inline T t_vec3<T>::getLength() const
 {
-    return sqrt(x * x + y * y + z * z);
+    return MathT::sqrt<T>(x * x + y * y + z * z);
 }
 template <class T>
 inline T t_vec3<T>::getLengthSquared() const
@@ -106,7 +109,7 @@ inline T t_vec3<T>::getLengthSquared() const
 template <class T>
 inline void t_vec3<T>::normalize()
 {
-    T length = getLength();
+    const T length = getLength();
     x /= length;
     y /= length;
     z /= length;
@@ -138,7 +141,7 @@ inline T t_vec3<T>::dot(const t_vec3<T>& v1, const t_vec3<T>& v2)
     return (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
 }
 template <class T>
-inline T t_vec3<T>::dot(const t_vec3<T>& v2)
+inline T t_vec3<T>::dot(const t_vec3<T>& v2) const
 {
     return (x * v2.x) + (y * v2.y) + (z * v2.z);
 }
@@ -152,7 +155,7 @@ inline t_vec3<T> t_vec3<T>::cross(const t_vec3<T>& v1, const t_vec3<T>& v2)
     return t_vec3<T>(x, y, z);
 }
 template <class T>
-inline t_vec3<T> t_vec3<T>::cross(const t_vec3<T>& v2)
+inline t_vec3<T> t_vec3<T>::cross(const t_vec3<T>& v2) const
 {
     T x = (y * v2.z) - (z * v2.y);
     T y = (x * v2.z) - (z * v2.x);
@@ -221,3 +224,5 @@ typedef t_vec3<float> vec3_32;
 typedef t_vec3<double> vec3_64;
 
 typedef vec3_32 vec3;
+
+#pragma warning(pop)

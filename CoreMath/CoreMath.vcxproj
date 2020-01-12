@@ -120,9 +120,12 @@
   <ItemGroup>
     <ClInclude Include="include\KDTree.h" />
     <ClInclude Include="include\MathHelpers.h" />
+    <ClInclude Include="include\Matrix4.h" />
     <ClInclude Include="include\PoissonDiskNoise.h" />
+    <ClInclude Include="include\Pose.h" />
     <ClInclude Include="include\Quaternion.h" />
     <ClInclude Include="include\Random.h" />
+    <ClInclude Include="include\Transform.h" />
     <ClInclude Include="include\Vector2.h" />
     <ClInclude Include="include\Vector3.h" />
   </ItemGroup>

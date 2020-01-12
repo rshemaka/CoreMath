@@ -1,4 +1,4 @@
-// Richard Shemaka - 2019
+// Richard Shemaka - 2020
 // https://github.com/rshemaka/CoreMath
 
 #pragma once
@@ -76,11 +76,6 @@ template <class T>
 inline t_vec3<T> operator/(const t_vec3<T>& v, float t)
 {
     return t_vec3<T>(v.x / t, v.y / t, v.z / t);
-}
-template <class T>
-inline float operator|(const t_vec3<T>& v1, const t_vec3<T>& v2)
-{
-    return v1.dot(v2);
 }
 template <class T>
 inline std::ostream& operator<<(std::ostream& os, const t_vec3<T>& v)
@@ -223,6 +218,7 @@ inline t_vec3<T>& t_vec3<T>::operator/=(T t)
 typedef t_vec3<float> vec3_32;
 typedef t_vec3<double> vec3_64;
 
+// 3d arithmetic vector
 typedef vec3_32 vec3;
 
 #pragma warning(pop)

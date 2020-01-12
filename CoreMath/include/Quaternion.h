@@ -1,9 +1,10 @@
-// Richard Shemaka - 2019
+// Richard Shemaka - 2020
 // https://github.com/rshemaka/CoreMath
 
 // Sources:
 // https://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation
 // https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
+// http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/transforms/index.htm
 // https://gamedev.stackexchange.com/questions/28395/rotating-vector3-by-a-quaternion
 
 #pragma once
@@ -14,7 +15,7 @@
 #pragma warning(push)
 #pragma warning(disable : 4244)
 
-// quaternion representation of 3d rotation
+// quaternion representation of 3D rotation
 //
 // float & double precision currently supported. 32bit fixed point in the future, hopefully.
 //
@@ -36,7 +37,7 @@ class t_quat
     inline bool isUnit(T epsilon = 0.0001) const;
     inline t_quat<T> getUnit() const;
 
-    t_vec3<T> rotateVector(const t_vec3<T>& v);
+    t_vec3<T> rotateVector(const t_vec3<T>& v) const;
 
     // output in degrees
     void getEulerAngles(T& outRoll, T& outPitch, T& outYaw) const;
@@ -105,11 +106,10 @@ inline t_quat<T> t_quat<T>::getUnit() const
 }
 
 template <class T>
-inline t_vec3<T> t_quat<T>::rotateVector(const t_vec3<T>& v)
+inline t_vec3<T> t_quat<T>::rotateVector(const t_vec3<T>& v) const
 {
     const t_vec3<T> u(x, y, z);
-    const float s = w;
-    return 2.0 * t_vec3<T>::dot(u, v) * u + (s * s - t_vec3<T>::dot(u, u)) * v + 2.0 * s * t_vec3<T>::cross(u, v);
+    return 2.0 * t_vec3<T>::dot(u, v) * u + (w * w - t_vec3<T>::dot(u, u)) * v + 2.0 * w * t_vec3<T>::cross(u, v);
 }
 
 // output in degrees
@@ -140,6 +140,7 @@ inline void t_quat<T>::getEulerAngles(T& outRoll, T& outPitch, T& outYaw) const
 typedef t_quat<float> quat_32;
 typedef t_quat<double> quat_64;
 
+// quaternion representation of 3D rotation
 typedef quat_32 quat;
 
 #pragma warning(pop)

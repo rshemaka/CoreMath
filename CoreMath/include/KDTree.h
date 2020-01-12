@@ -1,4 +1,4 @@
-// Richard Shemaka - 2019
+// Richard Shemaka - 2020
 // https://github.com/rshemaka/CoreMath
 
 #pragma once

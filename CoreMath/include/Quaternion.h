@@ -42,7 +42,6 @@ class t_quat
     // output in degrees
     void getEulerAngles(T& outRoll, T& outPitch, T& outYaw) const;
 
-  private:
     T w = 1.0;
     T x = 0.0;
     T y = 0.0;

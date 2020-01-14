@@ -41,7 +41,7 @@ class t_randomStream
         if (size == 0)
             return 0;
 
-        T t = randRange(0, T(size - MathT::epsilon<T>()));
+        T t = randRange(0, static_cast<T>(size) - MathT::epsilon<T>());
         return uint32_t(MathT::floor<T>(t));
     }
 
@@ -75,7 +75,7 @@ class t_randomStream
             x = 1.0;
             lengthSquared = 1.0;
         }
-        T normalizeCoeff = (T)1.0 / MathT::sqrt<T>(lengthSquared);
+        T normalizeCoeff = 1.0 / MathT::sqrt<T>(lengthSquared);
         return VEC3(x, y, z) * normalizeCoeff;
     }
 
@@ -96,16 +96,16 @@ class t_randomStream
 };
 
 // 32-bit random stream
-class randomStream : public t_randomStream<float, vec2, vec3>
+class randomStream_32 : public t_randomStream<float, vec2, vec3>
 {
   public:
-    randomStream() : t_randomStream<float, vec2, vec3>()
+    randomStream_32() : t_randomStream<float, vec2, vec3>()
     {
         std::random_device rd{};
         rng = std::mt19937{rd()};
     }
 
-    randomStream(unsigned int seed) : t_randomStream<float, vec2, vec3>()
+    randomStream_32(unsigned int seed) : t_randomStream<float, vec2, vec3>()
     {
         rng = std::mt19937{seed};
     }
@@ -142,6 +142,9 @@ class randomStream_64 : public t_randomStream<double, vec2_64, vec3_64>
   private:
     std::mt19937_64 rng;
 };
+
+// random stream, mersenne twister engine, uniform distribution
+typedef randomStream_32 randomStream;
 
 // global random stream (32-bit)
 static randomStream gRandom;

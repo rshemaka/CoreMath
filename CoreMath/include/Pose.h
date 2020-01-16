@@ -48,4 +48,4 @@ typedef t_pose<double> pose_64;
 typedef pose_32 pose;
 
 // confirm size restriction
-static_assert(sizeof(pose) == 32, "pose<float> should be 32 bytes");
+static_assert(sizeof(pose_32) == 32, "pose<float> should be 32 bytes");

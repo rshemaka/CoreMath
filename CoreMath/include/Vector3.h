@@ -24,9 +24,13 @@ class t_vec3
     t_vec3(T inT) : x(inT), y(inT), z(inT) {}
     t_vec3(T inX, T inY, T inZ) : x(inX), y(inY), z(inZ) {}
 
-    T x = 0.0;
-    T y = 0.0;
-    T z = 0.0;
+    static const t_vec3<T>& getForward();
+    static const t_vec3<T>& getRight();
+    static const t_vec3<T>& getUp();
+
+    T x;
+    T y;
+    T z;
 
     inline T getLength() const;
     inline T getLengthSquared() const;
@@ -39,6 +43,9 @@ class t_vec3
 
     static inline T dot(const t_vec3<T>& v1, const t_vec3<T>& v2);
     inline T dot(const t_vec3<T>& v2) const;
+
+    static inline T angle(const t_vec3<T>& v1, const t_vec3<T>& v2);
+    inline T angle(const t_vec3<T>& v2) const;
 
     static inline t_vec3<T> cross(const t_vec3<T>& v1, const t_vec3<T>& v2);
     inline t_vec3<T> cross(const t_vec3<T>& v2) const;
@@ -86,6 +93,27 @@ template <class T>
 inline std::wostream& operator<<(std::wostream& os, const t_vec3<T>& v)
 {
     return os << "<" << v.x << ", " << v.y << ", " << v.z << ">";
+}
+#pragma endregion
+
+#pragma region Static_Definitions
+template <class T>
+inline const t_vec3<T>& t_vec3<T>::getForward()
+{
+    const static t_vec3<T> forward(1.0, 0.0, 0.0);
+    return forward;
+}
+template <class T>
+inline const t_vec3<T>& t_vec3<T>::getRight()
+{
+    const static t_vec3<T> forward(0.0, 1.0, 0.0);
+    return forward;
+}
+template <class T>
+inline const t_vec3<T>& t_vec3<T>::getUp()
+{
+    const static t_vec3<T> forward(0.0, 0.0, 1.0);
+    return forward;
 }
 #pragma endregion
 
@@ -139,6 +167,17 @@ template <class T>
 inline T t_vec3<T>::dot(const t_vec3<T>& v2) const
 {
     return (x * v2.x) + (y * v2.y) + (z * v2.z);
+}
+
+template <class T>
+inline T t_vec3<T>::angle(const t_vec3<T>& v1, const t_vec3<T>& v2)
+{
+    return MathT::acos<T>(v1.getUnit().dot(v2.getUnit()));
+}
+template <class T>
+inline T t_vec3<T>::angle(const t_vec3<T>& v2) const
+{
+    return MathT::acos<T>(getUnit().dot(v2.getUnit()));
 }
 
 template <class T>

@@ -25,8 +25,8 @@ class t_vec2
     t_vec2(T inT) : x(inT), y(inT) {}
     t_vec2(T inX, T inY) : x(inX), y(inY) {}
 
-    T x = 0.0;
-    T y = 0.0;
+    T x;
+    T y;
 
     inline T getLength() const;
     inline T getLengthSquared() const;

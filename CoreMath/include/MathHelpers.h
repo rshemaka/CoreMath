@@ -6,7 +6,9 @@
 #include <cmath>
 
 constexpr float Pi = 3.141592f;
+constexpr double Pi_64 = 3.141592653589793;
 constexpr float TwoPi = 6.2831853f;
+constexpr double TwoPi_64 = 6.283185307179586;
 
 constexpr float DegToRads = Pi / 180.f;
 constexpr float RadsToDeg = 180.f / Pi;
@@ -104,21 +106,38 @@ namespace MathT
         return std::cos(x);
     }
 
+    // templated acos
+    template <class T>
+    inline T acos(T x)
+    {
+        throw std::logic_error("Templated acos should be specialized for all template types.");
+    }
+    template <>
+    inline float acos(float x)
+    {
+        return std::acosf(x);
+    }
+    template <>
+    inline double acos(double x)
+    {
+        return std::acos(x);
+    }
+
     // templated sine
     template <class T>
-    inline T sin(T t)
+    inline T sin(T x)
     {
         throw std::logic_error("Templated sin should be specialized for all template types.");
     }
     template <>
-    inline float sin(float t)
+    inline float sin(float x)
     {
-        return std::sinf(t);
+        return std::sinf(x);
     }
     template <>
-    inline double sin(double t)
+    inline double sin(double x)
     {
-        return std::sin(t);
+        return std::sin(x);
     }
 
     // templated asin
@@ -172,6 +191,57 @@ namespace MathT
         return std::copysign(number, sign);
     }
 
+    // templated mod
+    template <class T>
+    inline T mod(T numer, T denom)
+    {
+        throw std::logic_error("Templated mod should be specialized for all template types.");
+    }
+    template <>
+    inline float mod(float numer, float denom)
+    {
+        return std::fmodf(numer, denom);
+    }
+    template <>
+    inline double mod(double numer, double denom)
+    {
+        return std::fmod(numer, denom);
+    }
+
+    // templated pi
+    template <class T>
+    constexpr T pi()
+    {
+        throw std::logic_error("Templated pi should be specialized for all template types.");
+    }
+    template <>
+    constexpr float pi()
+    {
+        return Pi;
+    }
+    template <>
+    constexpr double pi()
+    {
+        return Pi_64;
+    }
+
+    // templated twoPi
+    template <class T>
+    constexpr T twoPi()
+    {
+        throw std::logic_error("Templated twoPi should be specialized for all template types.");
+    }
+    template <>
+    constexpr float twoPi()
+    {
+        return TwoPi;
+    }
+    template <>
+    constexpr double twoPi()
+    {
+        return TwoPi_64;
+    }
+
     // templated epsilon
     template <class T>
     constexpr T epsilon()
@@ -187,5 +257,14 @@ namespace MathT
     constexpr double epsilon()
     {
         return DBL_EPSILON;
+    }
+
+    template <class T>
+    T clampAngle(T theta)
+    {
+        theta = MathT::mod<T>(theta, MathT::twoPi<T>());
+        if (theta < 0.0)
+            theta += MathT::twoPi<T>();
+        return theta;
     }
 } // namespace MathT

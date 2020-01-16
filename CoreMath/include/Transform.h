@@ -20,15 +20,24 @@ class t_transform
     t_transform() {}
     t_transform(const t_vec3<T>& inPosition, const t_quat<T>& inRotation, const t_vec3<T>& inScale) : position(inPosition), rotation(inRotation), scale(inScale) {}
 
+    static const t_transform<T>& getIdentity();
+
     t_vec3<T> position;
     t_quat<T> rotation;
-    t_vec3<T> scale = t_vec3<T>(1.0);
+    t_vec3<T> scale;
 
     inline t_vec3<T> transformPoint(const t_vec3<T>& point) const;
     inline t_vec3<T> transformVector(const t_vec3<T>& vector) const;
 
     inline t_transform<T>& operator*=(const t_transform<T>& t2);
 };
+
+template <class T>
+inline const t_transform<T>& t_transform<T>::getIdentity()
+{
+    static const t_transform<T> identity(t_vec3<T>(0.0), t_quat<T>::getIdentity(), t_vec3<T>(1.0));
+    return identity;
+}
 
 template <class T>
 inline t_vec3<T> t_transform<T>::transformPoint(const t_vec3<T>& point) const
@@ -44,7 +53,7 @@ template <class T>
 inline t_vec3<T> t_transform<T>::transformVector(const t_vec3<T>& vector) const
 {
     t_vec3<T> outVector;
-    outVector = rotation.rotateVector(outVector);
+    outVector = rotation.rotateVector(vector);
     outVector *= scale;
     return outVector;
 }

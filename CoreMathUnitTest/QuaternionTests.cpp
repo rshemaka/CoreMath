@@ -4,8 +4,9 @@
 #include "CppUnitTest.h"
 #include "stdafx.h"
 
-#include "PoissonDiskNoise.h"
+#include "MathHelpers.h"
 #include "Quaternion.h"
+#include "Random.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -14,34 +15,63 @@ namespace CoreMathUnitTest
     TEST_CLASS (QuaternionTests)
     {
       public:
+        TEST_METHOD (Identity)
+        {
+            for (int i = 0, n = 128; i != n; ++i)
+            {
+                const vec3 randomPoint = randomPointInUnitSphere();
+                const quat& identity = quat::getIdentity();
+                const vec3 outRandomPoint = identity.rotateVector(randomPoint);
+
+                std::wstringstream outputStream;
+                outputStream << "\n"
+                             << "randomPoint: " << randomPoint << "\n"
+                             << "outRandomPoint: " << outRandomPoint << "\n";
+                Assert::IsTrue(randomPoint.isEqual(outRandomPoint), outputStream.str().c_str());
+            }
+        }
         TEST_METHOD (RotateVector)
         {
-            vec3 v(1.f);
-            quat identity;
-            v = identity.rotateVector(v);
-            Assert::IsTrue(v.isEqual(vec3(1.f)));
+            for (int i = 0, n = 128; i != n; ++i)
+            {
+                const vec3 point = randomPointInUnitSphere();
+                const float angleShift = randRange(FLT_EPSILON, TwoPi);
+                quat rotation = quat(angleShift, 0.f, 0.f);
+                const vec3 outPoint = rotation.rotateVector(point);
 
-            quat a(0.f, 0.f, -45.f);
-            v = a.rotateVector(vec3(1.f, 0.f, 0.f));
-            vec3 expectedOut(1.f, 1.f, 0.f);
-            expectedOut.normalize();
+                std::wstringstream outputStream;
+                outputStream << "\n"
+                             << "point: " << point << "\n"
+                             << "outPoint: " << outPoint << "\n";
 
-            std::wstringstream outputStream;
-            outputStream << "\n"
-                         << "Rotated vector: " << v << "\n"
-                         << "Expected result: " << expectedOut;
-
-            Assert::IsTrue(v.isEqual(expectedOut), outputStream.str().c_str());
+                Assert::AreEqual(point.getLengthSquared(), outPoint.getLengthSquared(), outputStream.str().c_str());
+                Assert::AreEqual(point.angle(outPoint), angleShift, outputStream.str().c_str());
+            }
         }
         TEST_METHOD (EulerConversions)
         {
-            quat a(10.f, 20.f, 30.f);
-            Assert::IsTrue(a.isUnit());
-            float roll, pitch, yaw;
-            a.getEulerAngles(roll, pitch, yaw);
-            Assert::AreEqual(10.f, roll, 0.0001f);
-            Assert::AreEqual(20.f, pitch, 0.0001f);
-            Assert::AreEqual(30.f, yaw, 0.0001f);
+            auto isEqualOrOffByPi = [](float a, float b) { return MathHelpers::isNearlyEqual(a, b) || MathHelpers::isNearlyEqual(std::fabsf(a - b), Pi); };
+
+            for (int i = 0, n = 128; i != n; ++i)
+            {
+                const float inRoll = randRange(0.f, TwoPi / 3.f);
+                const float inPitch = randRange(0.f, TwoPi / 3.f);
+                const float inYaw = randRange(0.f, TwoPi / 3.f);
+                quat a(inRoll, inPitch, inYaw);
+                Assert::IsTrue(a.isUnit());
+                float outRoll, outPitch, outYaw;
+                a.getEulerAngles(outRoll, outPitch, outYaw);
+
+                std::wstringstream outputStream;
+                outputStream << "\n"
+                             << "iteration #: " << i << "\n";
+                Assert::AreEqual(inRoll, outRoll, 0.00001f, outputStream.str().c_str());
+                Assert::AreEqual(inPitch, outPitch, 0.00001f, outputStream.str().c_str());
+                Assert::AreEqual(inYaw, outYaw, 0.00001f, outputStream.str().c_str());
+                // Assert::IsTrue(isEqualOrOffByPi(inRoll, outRoll));
+                // Assert::IsTrue(isEqualOrOffByPi(inPitch, outPitch));
+                // Assert::IsTrue(isEqualOrOffByPi(inYaw, outYaw));
+            }
         }
     };
 } // namespace CoreMathUnitTest
